@@ -5,12 +5,14 @@ import { lightTap } from '../utils/haptics';
 
 interface ScanButtonProps {
   onPress: () => void;
+  onLongPress?: () => void;
   isScanning: boolean;
   size?: number;
 }
 
 export const ScanButton: React.FC<ScanButtonProps> = ({
   onPress,
+  onLongPress,
   isScanning,
   size = 80,
 }) => {
@@ -48,7 +50,7 @@ export const ScanButton: React.FC<ScanButtonProps> = ({
   const dotSize = isScanning ? 12 : 20;
 
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={0.8}>
+    <TouchableOpacity onPress={handlePress} onLongPress={onLongPress} activeOpacity={0.8}>
       <Animated.View
         style={[
           styles.outerRing,
