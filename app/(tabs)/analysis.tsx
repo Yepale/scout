@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Camera, Upload, AlertTriangle, Shield } from 'lucide-react-native';
+import { Camera, Upload, AlertTriangle, Shield, Clock } from 'lucide-react-native';
 import { colors } from '../../src/theme';
 import { GlassCard } from '../../src/components/GlassCard';
 import { ProbabilityBar } from '../../src/components/ProbabilityBar';
+import { BiteMonitor } from '../../src/components/BiteMonitor';
 import { useDetectionStore } from '../../src/stores';
 import { generateBiteAnalysis } from '../../src/utils/demoData';
 import { mediumTap } from '../../src/utils/haptics';
@@ -86,6 +87,7 @@ export default function AnalysisScreen() {
               <Camera size={18} color={colors.primary} />
               <Text style={styles.newScanText}>New Analysis</Text>
             </TouchableOpacity>
+            <BiteMonitor onCapture={() => { mediumTap(); handleAnalyze(); }} />
           </>
         )}
       </ScrollView>
