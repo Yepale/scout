@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Scout",
+    "slug": "scout",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "scout",
+    "splash": {
+      "backgroundColor": "#0A0D12"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Scout uses your camera to detect ticks, fleas, and parasites in real time."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A0D12",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": ["CAMERA"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Scout uses your camera to detect ticks, fleas, and parasites in real time."
+        }
+      ]
+    ]
+  }
+}
