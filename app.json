@@ -17,6 +17,7 @@
       }
     },
     "android": {
+      "package": "com.uyobonus.scout",
       "adaptiveIcon": {
         "backgroundColor": "#0A0D12",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -24,7 +25,11 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "permissions": ["CAMERA"]
+      "permissions": [
+        "CAMERA",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -37,6 +42,13 @@
           "cameraPermission": "Scout uses your camera to detect ticks, fleas, and parasites in real time."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f2270d02-c639-4770-a13f-714f3156a12b"
+      }
+    },
+    "owner": "uyobonus"
   }
 }
