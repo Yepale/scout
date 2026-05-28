@@ -1,10 +1,21 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, AppState } from 'react-native';
 import { colors } from '../src/theme';
+import { useEffect, useRef } from 'react';
+import { setupNotificationHandler, configureNotificationCategories } from '../src/services/notifications';
 
 export default function RootLayout() {
+  const didInit = useRef(false);
+
+  useEffect(() => {
+    if (didInit.current) return;
+    didInit.current = true;
+    setupNotificationHandler();
+    configureNotificationCategories();
+  }, []);
+
   return (
     <GestureHandlerRootView style={styles.root}>
       <StatusBar style="light" />

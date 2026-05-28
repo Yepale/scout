@@ -4,6 +4,7 @@ import { Clock, Bell, BellOff, RotateCcw, Camera } from 'lucide-react-native';
 import { colors } from '../theme';
 import { GlassCard } from './GlassCard';
 import { lightTap, mediumTap } from '../utils/haptics';
+import { scheduleBiteCheckAlarm, cancelBiteCheckAlarm, requestNotificationPermissions } from '../services/notifications';
 
 interface BiteMonitorProps {
   onCapture?: () => void;
@@ -43,18 +44,20 @@ export const BiteMonitor: React.FC<BiteMonitorProps> = ({ onCapture }) => {
     setElapsed(0);
     setAlarmSet(false);
     setAlarmTriggered(false);
+    cancelBiteCheckAlarm();
   }, []);
 
-  const toggleAlarm = useCallback(() => {
+  const toggleAlarm = useCallback(async () => {
     lightTap();
     if (!alarmSet) {
+      const permitted = await requestNotificationPermissions();
+      if (!permitted) return;
       setAlarmSet(true);
-      // 24h alarm
-      setTimeout(() => {
-        setAlarmTriggered(true);
-      }, 24 * 60 * 60 * 1000);
+      await scheduleBiteCheckAlarm();
+      setTimeout(() => setAlarmTriggered(true), 24 * 60 * 60 * 1000);
     } else {
       setAlarmSet(false);
+      await cancelBiteCheckAlarm();
     }
   }, [alarmSet]);
 

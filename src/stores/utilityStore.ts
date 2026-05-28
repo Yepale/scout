@@ -3,6 +3,7 @@ import { create } from 'zustand';
 export type FlashMode = 'off' | 'normal' | 'red' | 'green' | 'uv' | 'strobe' | 'white';
 export type ScreenMode = 'normal' | 'white-warm' | 'white-cold' | 'red-night' | 'green-night' | 'blue-contrast';
 export type UtilityPreset = 'normal' | 'camp' | 'night' | 'emergency';
+export type CameraFilter = 'none' | 'uv' | 'thermal' | 'high-contrast' | 'edge-detect' | 'invert' | 'sepia' | 'dramatic';
 
 interface UtilityState {
   // Flashlight
@@ -27,6 +28,10 @@ interface UtilityState {
   audioFeedback: boolean;
   voiceCommands: boolean;
   lastVoiceCommand: string;
+
+  // Camera filters
+  cameraFilter: CameraFilter;
+  filterIntensity: number; // 0-1
 
   // UI
   showUtilityPanel: boolean;
@@ -55,6 +60,10 @@ interface UtilityState {
   setVoiceCommands: (v: boolean) => void;
   setLastVoiceCommand: (c: string) => void;
 
+  // Actions — Filters
+  setCameraFilter: (f: CameraFilter) => void;
+  setFilterIntensity: (v: number) => void;
+
   // Actions — UI
   setShowUtilityPanel: (v: boolean) => void;
   setOverlayMinimal: (v: boolean) => void;
@@ -79,6 +88,8 @@ const initialState = {
   audioFeedback: false,
   voiceCommands: false,
   lastVoiceCommand: '',
+  cameraFilter: 'none' as CameraFilter,
+  filterIntensity: 0.7,
   showUtilityPanel: false,
   overlayMinimal: false,
 };
@@ -145,6 +156,8 @@ export const useUtilityStore = create<UtilityState>((set, get) => ({
   setAudioFeedback: (v) => set({ audioFeedback: v }),
   setVoiceCommands: (v) => set({ voiceCommands: v }),
   setLastVoiceCommand: (c) => set({ lastVoiceCommand: c }),
+  setCameraFilter: (f) => set({ cameraFilter: f }),
+  setFilterIntensity: (v) => set({ filterIntensity: Math.max(0.1, Math.min(1, v)) }),
   setShowUtilityPanel: (v) => set({ showUtilityPanel: v }),
   setOverlayMinimal: (v) => set({ overlayMinimal: v }),
   resetAll: () => set(initialState),

@@ -9,6 +9,7 @@ import { colors } from '../../src/theme';
 import { ScanMode } from '../../src/utils/constants';
 import { useDetectionStore } from '../../src/stores';
 import { useUtilityStore } from '../../src/stores/utilityStore';
+import { useSettingsStore } from '../../src/stores/settingsStore';
 import { lightTap, mediumTap, heavyTap } from '../../src/utils/haptics';
 import { useDetectionSimulation } from '../../src/hooks/useDetectionSimulation';
 import { useScreenAwake } from '../../src/hooks/useScreenAwake';
@@ -24,6 +25,8 @@ import { QuickScanRing } from '../../src/components/QuickScanRing';
 import { CampModeButton } from '../../src/components/CampModeButton';
 import { UtilityPanel } from '../../src/components/UtilityPanel';
 import { WhiteScreen } from '../../src/components/WhiteScreen';
+import { CameraFilterOverlay } from '../../src/components/CameraFilterOverlay';
+import { DemoModePanel } from '../../src/components/DemoModePanel';
 import { GlassCard } from '../../src/components/GlassCard';
 import { PRESET_LABELS, getCurrentPreset, PresetMode } from '../../src/utils/presets';
 
@@ -37,6 +40,7 @@ export default function ScanScreen() {
   const [showRadial, setShowRadial] = useState(false);
   const [presetLabel, setPresetLabel] = useState<string | null>(null);
   const [brightnessPct, setBrightnessPct] = useState<number | null>(null);
+  const [showDemoPanel, setShowDemoPanel] = useState(false);
   const alertAnim = useRef(new Animated.Value(0)).current;
   const presetOpacity = useRef(new Animated.Value(0)).current;
   const brightOpacity = useRef(new Animated.Value(0)).current;
@@ -53,6 +57,8 @@ export default function ScanScreen() {
     showUtilityPanel, setShowUtilityPanel, flashMode,
     setFlashMode, setScreenMode, screenBrightness,
   } = useUtilityStore();
+
+  const demoMode = useSettingsStore((s) => s.demoMode);
 
   const { startScan, stopScan } = useDetectionSimulation();
   const { visible: uiVisible, reset: resetAutoHide } = useAutoHide(4500);
@@ -217,6 +223,17 @@ export default function ScanScreen() {
             )}
           </View>
 
+          {/* ─── Demo mode button ─────────────────────────── */}
+          {demoMode && (
+            <TouchableOpacity
+              onPress={() => { lightTap(); setShowDemoPanel(true); }}
+              style={styles.demoBtn}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.demoBtnText}>🎯 Demo</Text>
+            </TouchableOpacity>
+          )}
+
           {/* ─── Preset indicator pill ─────────────────────────── */}
           {currentPreset !== 'normal' && (
             <Animated.View style={[styles.presetPill, { opacity: uiVisible ? 1 : 0.6 }]}>
@@ -276,6 +293,9 @@ export default function ScanScreen() {
         </View>
       </CameraView>
 
+      {/* ─── Camera Filter Overlay ─────────────────────────────── */}
+      <CameraFilterOverlay />
+
       {/* ─── Gesture zones (transparent, over camera) ──────────── */}
       <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
         {/* Center: horizontal swipe for presets */}
@@ -333,6 +353,9 @@ export default function ScanScreen() {
           </View>
         </TouchableOpacity>
       </Modal>
+
+      {/* ─── Demo Mode Panel ────────────────────────────────────── */}
+      <DemoModePanel visible={showDemoPanel} onClose={() => setShowDemoPanel(false)} />
     </View>
   );
 }
@@ -381,6 +404,16 @@ const styles = StyleSheet.create({
     borderWidth: 1, borderColor: colors.glassBorder,
   },
   presetPillText: { color: colors.primary, fontSize: 11, fontWeight: '700', letterSpacing: 0.5 },
+
+  // Demo button
+  demoBtn: {
+    position: 'absolute', top: 48, right: 16,
+    paddingHorizontal: 12, paddingVertical: 5,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0,245,212,0.15)',
+    borderWidth: 1, borderColor: colors.primary,
+  },
+  demoBtnText: { color: colors.primary, fontSize: 11, fontWeight: '700' },
 
   // Preset flash label
   presetFlash: {

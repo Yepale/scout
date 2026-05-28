@@ -11,7 +11,7 @@ import {
 } from 'lucide-react-native';
 import { colors } from '../theme';
 import { GlassCard } from './GlassCard';
-import { useUtilityStore, FlashMode, ScreenMode } from '../stores/utilityStore';
+import { useUtilityStore, FlashMode, ScreenMode, CameraFilter } from '../stores/utilityStore';
 import { lightTap, mediumTap } from '../utils/haptics';
 
 // ─── Flashlight Mode Button ──────────────────────────────────────
@@ -74,6 +74,34 @@ const ScreenBtn = ({
   );
 };
 
+// ─── Camera Filter Button ────────────────────────────────────────
+
+const FilterBtn = ({
+  filter,
+  label,
+  current,
+  onPress,
+  color = colors.primary,
+}: {
+  filter: CameraFilter;
+  label: string;
+  current: CameraFilter;
+  onPress: (f: CameraFilter) => void;
+  color?: string;
+}) => {
+  const isActive = current === filter;
+  return (
+    <TouchableOpacity
+      onPress={() => { lightTap(); onPress(filter); }}
+      style={[styles.utilBtn, isActive && { borderColor: color, backgroundColor: `${color}15` }]}
+      activeOpacity={0.7}
+    >
+      <View style={[styles.filterDot, { backgroundColor: isActive ? color : 'transparent', borderColor: isActive ? color : colors.textTertiary }]} />
+      <Text style={[styles.utilLabel, isActive && { color }]}>{label}</Text>
+    </TouchableOpacity>
+  );
+};
+
 // ─── Main Panel ──────────────────────────────────────────────────
 
 interface UtilityPanelProps {
@@ -104,6 +132,7 @@ export const UtilityPanel: React.FC<UtilityPanelProps> = ({ visible, onClose }) 
     audioFeedback, setAudioFeedback,
     voiceCommands, setVoiceCommands,
     overlayMinimal, setOverlayMinimal,
+    cameraFilter, setCameraFilter,
     activatePreset,
   } = useUtilityStore();
 
@@ -185,6 +214,19 @@ export const UtilityPanel: React.FC<UtilityPanelProps> = ({ visible, onClose }) 
           <ScreenBtn mode="red-night" icon={Moon} label="Red" current={screenMode} onPress={setScreenMode} color={colors.error} />
           <ScreenBtn mode="green-night" icon={Moon} label="Green" current={screenMode} onPress={setScreenMode} color={colors.success} />
           <ScreenBtn mode="blue-contrast" icon={Eye} label="Blue" current={screenMode} onPress={setScreenMode} color={colors.cyan} />
+        </View>
+
+        {/* ─── Camera Filters ─── */}
+        <Text style={styles.sectionTitle}>Camera Filters</Text>
+        <View style={styles.utilGrid}>
+          <FilterBtn filter="none" label="Off" current={cameraFilter} onPress={setCameraFilter} />
+          <FilterBtn filter="uv" label="UV" current={cameraFilter} onPress={setCameraFilter} color="#8844FF" />
+          <FilterBtn filter="thermal" label="Thermal" current={cameraFilter} onPress={setCameraFilter} color="#FF4400" />
+          <FilterBtn filter="high-contrast" label="Contrast" current={cameraFilter} onPress={setCameraFilter} color={colors.text} />
+          <FilterBtn filter="edge-detect" label="Edge" current={cameraFilter} onPress={setCameraFilter} color={colors.textSecondary} />
+          <FilterBtn filter="invert" label="Invert" current={cameraFilter} onPress={setCameraFilter} color="#888" />
+          <FilterBtn filter="sepia" label="Sepia" current={cameraFilter} onPress={setCameraFilter} color="#704214" />
+          <FilterBtn filter="dramatic" label="Dramatic" current={cameraFilter} onPress={setCameraFilter} color="#1a1a2e" />
         </View>
 
         {/* ─── Persistent Controls ─── */}
@@ -303,6 +345,9 @@ const styles = StyleSheet.create({
     minWidth: 80,
   },
   utilLabel: { color: colors.textSecondary, fontSize: 11, fontWeight: '600' },
+
+  // Filter button
+  filterDot: { width: 10, height: 10, borderRadius: 5, borderWidth: 1.5 },
 
   // Persistent card
   persistCard: { gap: 0 },

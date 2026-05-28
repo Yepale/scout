@@ -44,9 +44,11 @@ export function applyPreset(preset: PresetMode) {
     case 'uv-contrast':
       store.setFlashMode('uv');
       store.setScreenMode('blue-contrast');
+      store.setCameraFilter('uv');
       break;
     case 'camp':
       store.setCampMode(true);
+      store.setCameraFilter('none');
       break;
     case 'sos':
       store.activatePreset('emergency');
