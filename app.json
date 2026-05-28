@@ -41,7 +41,8 @@
         {
           "cameraPermission": "Scout uses your camera to detect ticks, fleas, and parasites in real time."
         }
-      ]
+      ],
+      "expo-sharing"
     ],
     "extra": {
       "router": {},

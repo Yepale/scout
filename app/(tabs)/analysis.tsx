@@ -1,14 +1,16 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Camera, Upload, AlertTriangle, Shield, Clock } from 'lucide-react-native';
+import { Camera, Upload, AlertTriangle, Shield, Share2 } from 'lucide-react-native';
 import { colors } from '../../src/theme';
 import { GlassCard } from '../../src/components/GlassCard';
 import { ProbabilityBar } from '../../src/components/ProbabilityBar';
+import { ShareCard } from '../../src/components/ShareCard';
 import { BiteMonitor } from '../../src/components/BiteMonitor';
 import { useDetectionStore } from '../../src/stores';
 import { generateBiteAnalysis } from '../../src/utils/demoData';
 import { mediumTap } from '../../src/utils/haptics';
+import { useShareResults } from '../../src/hooks/useShareResults';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -17,6 +19,7 @@ export default function AnalysisScreen() {
   const results = useDetectionStore((s) => s.currentBiteAnalysis);
   const setBiteAnalysis = useDetectionStore((s) => s.setBiteAnalysis);
   const [hasImage, setHasImage] = useState(false);
+  const { viewRef, captureAndShare } = useShareResults();
 
   const handleAnalyze = useCallback(() => {
     mediumTap();
@@ -68,7 +71,13 @@ export default function AnalysisScreen() {
               </View>
             </GlassCard>
             <GlassCard style={styles.probabilityCard}>
-              <Text style={styles.probabilityTitle}>Probability Breakdown</Text>
+              <View style={styles.probHeader}>
+                <Text style={styles.probabilityTitle}>Probability Breakdown</Text>
+                <TouchableOpacity onPress={captureAndShare} style={styles.shareBtn} activeOpacity={0.7}>
+                  <Share2 size={16} color={colors.primary} />
+                  <Text style={styles.shareText}>Share</Text>
+                </TouchableOpacity>
+              </View>
               {results?.map((r, i) => (<ProbabilityBar key={r.type} label={r.type} probability={r.probability} delay={i * 100} />))}
             </GlassCard>
             <GlassCard style={styles.guidanceCard}>
@@ -91,6 +100,17 @@ export default function AnalysisScreen() {
           </>
         )}
       </ScrollView>
+
+      {/* Hidden share card (offscreen, for capture) */}
+      <View style={styles.hiddenCard}>
+        <ShareCard
+          ref={viewRef}
+          type="analysis"
+          resultType={topResult?.type ?? 'Tick'}
+          probability={topResult?.probability ?? 70}
+          mode={hasImage ? 'Analysis' : 'Scan'}
+        />
+      </View>
     </View>
   );
 }
@@ -122,6 +142,17 @@ const styles = StyleSheet.create({
   disclaimerText: { color: colors.textTertiary, fontSize: 11, fontWeight: '400', flex: 1 },
   probabilityCard: {},
   probabilityTitle: { color: colors.text, fontSize: 15, fontWeight: '600', marginBottom: 16 },
+  probHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    marginBottom: 16,
+  },
+  shareBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    paddingVertical: 6, paddingHorizontal: 12,
+    borderRadius: 16,
+    borderWidth: 1, borderColor: 'rgba(0,245,212,0.3)',
+  },
+  shareText: { color: colors.primary, fontSize: 12, fontWeight: '600' },
   guidanceCard: {},
   guidanceTitle: { color: colors.text, fontSize: 15, fontWeight: '600', marginBottom: 8 },
   guidanceText: { color: colors.textSecondary, fontSize: 13, lineHeight: 19, marginBottom: 12 },
@@ -131,4 +162,9 @@ const styles = StyleSheet.create({
   severityText: { fontSize: 12, fontWeight: '600' },
   newScanBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 14, borderRadius: 28, borderWidth: 1, borderColor: colors.primary },
   newScanText: { color: colors.primary, fontSize: 15, fontWeight: '600' },
+  hiddenCard: {
+    position: 'absolute',
+    left: -9999,
+    top: 0,
+  },
 });
