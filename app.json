@@ -42,7 +42,15 @@
           "cameraPermission": "Scout uses your camera to detect ticks, fleas, and parasites in real time."
         }
       ],
-      "expo-sharing"
+      "expo-sharing",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#00F5D4"
+        }
+      ],
+      "expo-keep-awake"
     ],
     "extra": {
       "router": {},

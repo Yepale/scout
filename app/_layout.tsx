@@ -1,10 +1,9 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet, AppState } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { colors } from '../src/theme';
 import { useEffect, useRef } from 'react';
-import { setupNotificationHandler, configureNotificationCategories } from '../src/services/notifications';
 
 export default function RootLayout() {
   const didInit = useRef(false);
@@ -12,8 +11,15 @@ export default function RootLayout() {
   useEffect(() => {
     if (didInit.current) return;
     didInit.current = true;
-    setupNotificationHandler();
-    configureNotificationCategories();
+    // Initialize notifications safely (module may not be available)
+    try {
+      const initNotifs = async () => {
+        const { setupNotificationHandler, configureNotificationCategories } = await import('../src/services/notifications');
+        setupNotificationHandler();
+        configureNotificationCategories();
+      };
+      initNotifs();
+    } catch {}
   }, []);
 
   return (
