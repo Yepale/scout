@@ -5,22 +5,14 @@ import { StyleSheet, Linking } from 'react-native';
 import { colors } from '../src/theme';
 import { useEffect, useRef } from 'react';
 import { PresetMode } from '../src/utils/presets';
+import { useNotificationScheduler } from '../src/hooks/useNotificationScheduler';
 
 export default function RootLayout() {
   const didInit = useRef(false);
 
-  useEffect(() => {
-    if (didInit.current) return;
-    didInit.current = true;
-    try {
-      const initNotifs = async () => {
-        const { setupNotificationHandler, configureNotificationCategories } = await import('../src/services/notifications');
-        setupNotificationHandler();
-        configureNotificationCategories();
-      };
-      initNotifs();
-    } catch {}
-  }, []);
+  // Notification scheduler — sets up handlers, configures categories,
+  // schedules welcome tip, and reacts to settings toggles
+  useNotificationScheduler();
 
   // Deep link handler for app shortcuts (Flash, Scan, Camp)
   useEffect(() => {
