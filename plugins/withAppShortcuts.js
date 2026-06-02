@@ -1,4 +1,4 @@
-const { withAndroidManifest, withDangerousMod, withStringsXml, AndroidConfig } = require('expo/config-plugins');
+const { withAndroidManifest, withDangerousMod, AndroidConfig } = require('expo/config-plugins');
 const path = require('path');
 const fs = require('fs');
 
@@ -89,13 +89,31 @@ function withShortcutsManifest(config) {
 }
 
 function withShortcutsStrings(config, shortcuts) {
-  return withStringsXml(config, (strings) => {
-    for (const s of shortcuts) {
-      strings[`shortcut_${s.id}_short`] = s.shortLabel;
-      strings[`shortcut_${s.id}_long`] = s.longLabel;
-    }
-    return strings;
-  });
+  return withDangerousMod(config, [
+    'android',
+    async (modConfig) => {
+      const resDir = path.join(modConfig.modRequest.platformProjectRoot, 'app', 'src', 'main', 'res');
+      const stringsPath = path.join(resDir, 'values', 'strings.xml');
+      let stringsContent = '';
+      try { stringsContent = fs.readFileSync(stringsPath, 'utf-8'); } catch {}
+      for (const s of shortcuts) {
+        const shortKey = `shortcut_${s.id}_short`;
+        const longKey = `shortcut_${s.id}_long`;
+        if (!stringsContent.includes(`name="${shortKey}"`)) {
+          stringsContent = stringsContent.replace('</resources>', `  <string name="${shortKey}">${escapeXml(s.shortLabel)}</string>\n</resources>`);
+        }
+        if (!stringsContent.includes(`name="${longKey}"`)) {
+          stringsContent = stringsContent.replace('</resources>', `  <string name="${longKey}">${escapeXml(s.longLabel)}</string>\n</resources>`);
+        }
+      }
+      fs.writeFileSync(stringsPath, stringsContent);
+      return modConfig;
+    },
+  ]);
+}
+
+function escapeXml(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 module.exports = withAppShortcuts;
