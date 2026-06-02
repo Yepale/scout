@@ -38,35 +38,35 @@ export default function TabLayout() {
         name="scan"
         options={{
           title: 'Scan',
-          tabBarIcon: ({ color, size }) => <Scan size={size} color={color} />,
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => <Scan size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="analysis"
         options={{
           title: 'Analysis',
-          tabBarIcon: ({ color, size }) => <Search size={size} color={color} />,
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => <Search size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: 'History',
-          tabBarIcon: ({ color, size }) => <History size={size} color={color} />,
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => <History size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="tips"
         options={{
           title: 'Tips',
-          tabBarIcon: ({ color, size }) => <Lightbulb size={size} color={color} />,
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => <Lightbulb size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="account"
         options={{
           title: 'Account',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, size }: { color: string; size: number }) => (
             <View>
               <User size={size} color={color} />
               {isPremium && (

@@ -8,6 +8,8 @@
     "userInterfaceStyle": "dark",
     "scheme": "scout",
     "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
       "backgroundColor": "#0A0D12"
     },
     "ios": {
@@ -49,8 +51,7 @@
           "icon": "./assets/icon.png",
           "color": "#00F5D4"
         }
-      ],
-      "expo-keep-awake"
+      ]
     ],
     "extra": {
       "router": {},
