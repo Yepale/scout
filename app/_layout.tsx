@@ -1,9 +1,10 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Linking } from 'react-native';
 import { colors } from '../src/theme';
 import { useEffect, useRef } from 'react';
+import { PresetMode } from '../src/utils/presets';
 
 export default function RootLayout() {
   const didInit = useRef(false);
@@ -11,7 +12,6 @@ export default function RootLayout() {
   useEffect(() => {
     if (didInit.current) return;
     didInit.current = true;
-    // Initialize notifications safely (module may not be available)
     try {
       const initNotifs = async () => {
         const { setupNotificationHandler, configureNotificationCategories } = await import('../src/services/notifications');
@@ -20,6 +20,24 @@ export default function RootLayout() {
       };
       initNotifs();
     } catch {}
+  }, []);
+
+  // Deep link handler for app shortcuts (Flash, Scan, Camp)
+  useEffect(() => {
+    const handler = (url: string | null) => {
+      if (!url) return;
+      try {
+        const parsed = new URL(url);
+        const preset = parsed.searchParams.get('preset') as PresetMode | null;
+        if (preset) {
+          const { applyPreset } = require('../src/utils/presets');
+          applyPreset(preset);
+        }
+      } catch {}
+    };
+    const sub = Linking.addEventListener('url', (e) => handler(e.url));
+    Linking.getInitialURL().then(handler);
+    return () => sub.remove();
   }, []);
 
   return (

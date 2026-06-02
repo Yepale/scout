@@ -4,7 +4,7 @@ import { CameraView } from 'expo-camera';
 import {
   Zap, ZapOff, Search, PawPrint, Map, AlertTriangle, X, Tent,
 } from 'lucide-react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { colors } from '../../src/theme';
 import { ScanMode } from '../../src/utils/constants';
 import { useDetectionStore } from '../../src/stores';
@@ -103,6 +103,15 @@ export default function ScanScreen() {
     });
     return unsub;
   }, [flashPreset, showBrightness]);
+
+  // ─── Deep link from app shortcuts ────────────────────────────────
+  const params = useLocalSearchParams();
+  useEffect(() => {
+    if (params.preset && typeof params.preset === 'string') {
+      const { applyPreset } = require('../../src/utils/presets');
+      applyPreset(params.preset as PresetMode);
+    }
+  }, [params.preset]);
 
   // ─── Scan Logic ──────────────────────────────────────────────────
   const handleScan = useCallback(() => {

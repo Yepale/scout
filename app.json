@@ -34,6 +34,34 @@
     "plugins": [
       "expo-router",
       [
+        "./plugins/withAppShortcuts",
+        {
+          "shortcuts": [
+            {
+              "id": "flash",
+              "shortLabel": "Flash",
+              "longLabel": "Activate Flashlight",
+              "icon": "flash",
+              "deepLink": "scout://scan?preset=flashlight"
+            },
+            {
+              "id": "scan",
+              "shortLabel": "Scan",
+              "longLabel": "Quick Scan",
+              "icon": "scan",
+              "deepLink": "scout://scan"
+            },
+            {
+              "id": "camp",
+              "shortLabel": "Camp",
+              "longLabel": "Camp Mode",
+              "icon": "camp",
+              "deepLink": "scout://scan?preset=camp"
+            }
+          ]
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#0A0D12",
