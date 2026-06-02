@@ -68,6 +68,10 @@ export default function RootLayout() {
           name="emergency"
           options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
         />
+        <Stack.Screen
+          name="permissions"
+          options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
+        />
       </Stack>
     </GestureHandlerRootView>
   );

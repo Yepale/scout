@@ -326,6 +326,14 @@ export default function AccountScreen() {
           <SettingRow icon={BarChart3} label="Share Analytics" description="Help improve Scout" right={<ToggleSwitch value={settings.shareAnalytics} onToggle={settings.toggleAnalytics} />} />
           <Divider />
           <SettingRow icon={MapPin} label="Location" description="For risk maps" right={<ToggleSwitch value={settings.shareLocation} onToggle={settings.toggleLocation} />} />
+          <Divider />
+          <TouchableOpacity onPress={() => { lightTap(); router.push('/permissions'); }} activeOpacity={0.7}>
+            <View style={styles.settingRow}>
+              <View style={styles.settingIcon}><Shield size={18} color={colors.textSecondary} /></View>
+              <Text style={styles.settingText}>App Permissions</Text>
+              <Chevron />
+            </View>
+          </TouchableOpacity>
         </GlassCard>
 
         {/* ─── Account Actions ─── */}
