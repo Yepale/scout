@@ -334,6 +334,30 @@ export default function AccountScreen() {
               <Chevron />
             </View>
           </TouchableOpacity>
+          <Divider />
+          <TouchableOpacity onPress={() => { lightTap(); router.push('/legal/disclaimer'); }} activeOpacity={0.7}>
+            <View style={styles.settingRow}>
+              <View style={styles.settingIcon}><Shield size={18} color={colors.textSecondary} /></View>
+              <Text style={styles.settingText}>Aviso Legal</Text>
+              <Chevron />
+            </View>
+          </TouchableOpacity>
+          <Divider />
+          <TouchableOpacity onPress={() => { lightTap(); router.push('/legal/privacy'); }} activeOpacity={0.7}>
+            <View style={styles.settingRow}>
+              <View style={styles.settingIcon}><Shield size={18} color={colors.textSecondary} /></View>
+              <Text style={styles.settingText}>Política de Privacidad</Text>
+              <Chevron />
+            </View>
+          </TouchableOpacity>
+          <Divider />
+          <TouchableOpacity onPress={() => { lightTap(); router.push('/legal/terms'); }} activeOpacity={0.7}>
+            <View style={styles.settingRow}>
+              <View style={styles.settingIcon}><Shield size={18} color={colors.textSecondary} /></View>
+              <Text style={styles.settingText}>Términos de Servicio</Text>
+              <Chevron />
+            </View>
+          </TouchableOpacity>
         </GlassCard>
 
         {/* ─── Account Actions ─── */}
