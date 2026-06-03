@@ -28,7 +28,7 @@ import { WhiteScreen } from '../../src/components/WhiteScreen';
 import { CameraFilterOverlay } from '../../src/components/CameraFilterOverlay';
 import { DemoModePanel } from '../../src/components/DemoModePanel';
 import { GlassCard } from '../../src/components/GlassCard';
-import { PRESET_LABELS, getCurrentPreset, PresetMode } from '../../src/utils/presets';
+import { PRESET_LABELS, getCurrentPreset, PresetMode, applyPreset } from '../../src/utils/presets';
 
 const { width: SW, height: SH } = Dimensions.get('window');
 
@@ -108,7 +108,6 @@ export default function ScanScreen() {
   const params = useLocalSearchParams();
   useEffect(() => {
     if (params.preset && typeof params.preset === 'string') {
-      const { applyPreset } = require('../../src/utils/presets');
       applyPreset(params.preset as PresetMode);
     }
   }, [params.preset]);

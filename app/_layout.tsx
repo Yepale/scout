@@ -4,7 +4,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet, Linking } from 'react-native';
 import { colors } from '../src/theme';
 import { useEffect, useRef } from 'react';
-import { PresetMode } from '../src/utils/presets';
+import { PresetMode, applyPreset } from '../src/utils/presets';
 import { useNotificationScheduler } from '../src/hooks/useNotificationScheduler';
 
 export default function RootLayout() {
@@ -22,7 +22,6 @@ export default function RootLayout() {
         const parsed = new URL(url);
         const preset = parsed.searchParams.get('preset') as PresetMode | null;
         if (preset) {
-          const { applyPreset } = require('../src/utils/presets');
           applyPreset(preset);
         }
       } catch {}
